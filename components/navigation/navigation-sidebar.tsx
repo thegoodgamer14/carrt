@@ -35,7 +35,7 @@ export const NavigationSidebar = async () => {
               className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto"
             />
             <ScrollArea className="flex-1 w-full">
-                {servers.map((server) => {
+                {servers.map((server) => (
                     <div key={server.id} className="mb-4">
                         <NavigationItem 
                           id={server.id}
@@ -43,7 +43,7 @@ export const NavigationSidebar = async () => {
                           imageUrl={server.imageUrl}
                         />
                     </div>
-                })}
+                ))}
             </ScrollArea>
             <div className="pb-3 mt-auto flex items-center flex-col gap-y-4">
                 <ModeToggle />

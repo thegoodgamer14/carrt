@@ -50,6 +50,7 @@ export const CreateServerModal = () => {
 
     const handleClose = () => {
         form.reset()
+        router.refresh()
         onClose()
     }
 

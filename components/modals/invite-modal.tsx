@@ -11,7 +11,7 @@ import axios from "axios"
 import { useState } from "react"
 
 export const InviteModal = () => {
-    const { onOpenisOpen, onClose, type, data } = useModal()
+    const { onOpen, isOpen, onClose, type, data } = useModal()
     const origin = useOrigin()
     const isModalOpen = isOpen && type === "invite"
     const { server } = data
@@ -30,8 +30,9 @@ export const InviteModal = () => {
     const onNew = async () => {
         try {
             setIsLoading(true)
-            const response = await axios.patch(`/api/servers/${server?.id}/invite`)
-
+            const response = await axios.patch(`/api/servers/${server?.id}/invite-code`)
+            const updatedServer = response.data
+            onOpen("invite", { server: updatedServer })
         } catch (error) {
             console.log(error)
         } finally {
@@ -52,12 +53,12 @@ export const InviteModal = () => {
                         Server Invite Link
                     </Label>
                     <div className="flex items-center mt-2 gap-x-2">
-                        <Input className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0" value={inviteUrl} />
-                        <Button onClick={onCopy} size="icon">
+                        <Input disabled={isLoading} className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0" value={inviteUrl} />
+                        <Button disabled={isLoading} onClick={onCopy} size="icon">
                             {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                         </Button>
                     </div>
-                    <Button variant="link" size="sm" className="text-xs text-zinc-500 mt-4">
+                    <Button onClick={onNew} disabled={isLoading} variant="link" size="sm" className="text-xs text-zinc-500 mt-4">
                         Generate a new link
                         <RefreshCcw className="w-4 h-4 ml-2" />
                     </Button>

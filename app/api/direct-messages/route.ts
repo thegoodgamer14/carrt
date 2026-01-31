@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
+import { DirectMessage } from "@prisma/client"
 import { currentProfile } from "@/lib/current-profile"
-import { Message } from "@prisma/client"
 import { db } from "@/lib/db"
 
 const MESSAGES_BATCH = 10
@@ -8,55 +8,58 @@ const MESSAGES_BATCH = 10
 export async function GET(req: Request) {
     try {
         const profile = await currentProfile()
-        if (!profile) return new NextResponse("Unauthorized", { status: 401 })
-
         const { searchParams } = new URL(req.url)
-        const cursor = searchParams.get("cursor")
-        const channelId = searchParams.get("channelId")
 
-        if (!channelId) {
-            return new NextResponse("Channel ID is required", { status: 400 })
+        const cursor = searchParams.get("cursor")
+        const conversationId = searchParams.get("conversationId")
+
+        if (!profile) {
+            return new NextResponse("Unauthorized", { status: 401 })
         }
 
-        let messages: Message[] = []
+        if (!conversationId) {
+            return new NextResponse("Conversation ID missing", { status: 400 })
+        }
+
+        let messages: DirectMessage[] = []
 
         if (cursor) {
-            messages = await db.message.findMany({
+            messages = await db.directMessage.findMany({
                 take: MESSAGES_BATCH,
                 skip: 1,
                 cursor: {
                     id: cursor,
                 },
                 where: {
-                    channelId,
+                    conversationId,
                 },
                 include: {
                     member: {
                         include: {
                             profile: true,
-                        }
-                    }
+                        },
+                    },
                 },
                 orderBy: {
                     createdAt: "desc",
-                }
+                },
             })
         } else {
-            messages = await db.message.findMany({
+            messages = await db.directMessage.findMany({
                 take: MESSAGES_BATCH,
                 where: {
-                    channelId,
+                    conversationId,
                 },
                 include: {
                     member: {
                         include: {
                             profile: true,
-                        }
-                    }
+                        },
+                    },
                 },
                 orderBy: {
                     createdAt: "desc",
-                }
+                },
             })
         }
 
@@ -68,11 +71,10 @@ export async function GET(req: Request) {
 
         return NextResponse.json({
             items: messages,
-            nextCursor: nextCursor,
+            nextCursor,
         })
-
     } catch (error) {
-        console.log("[MESSAGES GET]", error)
+        console.log("[DIRECT_MESSAGES_GET]", error)
         return new NextResponse("Internal Error", { status: 500 })
     }
 }

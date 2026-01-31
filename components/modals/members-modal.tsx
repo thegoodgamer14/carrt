@@ -52,9 +52,9 @@ export const MembersModal = () => {
                     serverId: server?.id,
                 }
             })
-            const response = await axios.patch(url, {role})
+            const response = await axios.patch(url, { role })
             router.refresh()
-            onOpen("members", {server: response.data})
+            onOpen("members", { server: response.data })
         } catch (error) {
             console.log(error)
         } finally {
@@ -70,7 +70,7 @@ export const MembersModal = () => {
                         Manage Members
                     </DialogTitle>
                     <DialogDescription className="text-center text-zinc-500">
-                        { server?.members?.length } Members
+                        {server?.members?.length} Members
                     </DialogDescription>
                 </DialogHeader>
                 <ScrollArea className="mt-8 max-h-[420px] pr-6">
@@ -88,7 +88,7 @@ export const MembersModal = () => {
                             </div>
                             {server.profileId !== member.profileId && loadingId !== member.id && (
                                 <div className="ml-auto">
-                                    <DropdownMenu>
+                                    <DropdownMenu modal={false}>
                                         <DropdownMenuTrigger>
                                             <MoreVertical className="h-4 w-4 text-zinc-500" />
                                         </DropdownMenuTrigger>
@@ -119,8 +119,8 @@ export const MembersModal = () => {
                                                 </DropdownMenuPortal>
                                             </DropdownMenuSub>
                                             <DropdownMenuSeparator />
-                                            <DropdownMenuItem onClick={() => onKick(member.id)} 
-                                            className="text-rose-300">
+                                            <DropdownMenuItem onClick={() => onKick(member.id)}
+                                                className="text-rose-300">
                                                 <Gavel className="h-4 w-4 mr-2" />
                                                 Kick
                                             </DropdownMenuItem>

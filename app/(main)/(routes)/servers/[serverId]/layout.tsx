@@ -13,7 +13,7 @@ const ServerIdLayout = async ({
 }) => {
     const profile = await currentProfile()
 
-    if (!profile){
+    if (!profile) {
         return redirectToSignIn()
     }
 
@@ -28,18 +28,18 @@ const ServerIdLayout = async ({
         }
     })
 
-    if (!server){
+    if (!server) {
         return redirect("/")
     }
-     
+
     return (
         <div className="h-full">
-            <div className="md:flex h-full w-60 z-20 flex-col fixed inset-y-0">
+            <div className="flex h-full w-60 z-20 flex-col fixed inset-y-0 invisible md:visible">
                 <ServerSidebar
                     serverId={params.serverId}
                 />
             </div>
-            <main className="h-full md:pl-60">
+            <main className="h-full pl-0 md:pl-60">
                 {children}
             </main>
         </div>

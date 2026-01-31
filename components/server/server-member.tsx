@@ -7,7 +7,7 @@ import { useParams, useRouter } from "next/navigation"
 import { UserAvatar } from "../user-avatar"
 
 interface ServerMemberProps {
-    member: Member & { profile: Profile}
+    member: Member & { profile: Profile }
     server: Server
 }
 
@@ -26,7 +26,7 @@ export const ServerMember = ({
     const icon = roleIconMap[member.role]
 
     const onClick = () => {
-        router.push(`/servers/${params.serverId}/conversations/${member.id}`)
+        router.push(`/servers/${params?.serverId}/conversations/${member.id}`)
     }
 
     return (
